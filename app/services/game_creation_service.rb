@@ -1,4 +1,3 @@
-# app/services/game_creation_service.rb
 class GameCreationService
   Result = Struct.new(:success?, :game, :error_message)
 
@@ -8,26 +7,34 @@ class GameCreationService
   end
 
   def call
-    ActiveRecord::Base.transaction do
-      # 1. Verificar Saldo
-      unless user_has_enough_balance?
-        raise ActiveRecord::Rollback, "Insufficient funds"
+    @user.with_lock do
+      ActiveRecord::Base.transaction do
+        unless user_has_enough_balance?
+          return Result.new(false, nil, "Saldo insuficiente")
+        end
+
+        prize = draw_prize
+        return Result.new(false, nil, "Não foi possível gerar o jogo. Tente novamente.") unless prize
+
+        @user.decrement!(:balance_in_cents, @scratch_card.price_in_cents)
+
+        prize.decrement!(:stock) if prize.stock != -1
+
+        server_seed = SecureRandom.hex(16)
+        game_hash = Digest::SHA256.hexdigest("#{server_seed}-#{prize.id}")
+
+        game = Game.create!(
+          user: @user,
+          scratch_card: @scratch_card,
+          prize: prize,
+          server_seed: server_seed,
+          game_hash: game_hash,
+          status: :pending
+        )
+        return Result.new(true, game, nil)
       end
-      @user.decrement!(:balance_in_cents, @scratch_card.price_in_cents)
-      prize = draw_prize
-      server_seed = SecureRandom.hex(16)
-      game_hash = Digest::SHA256.hexdigest("#{server_seed}-#{prize.id}")
-      game = Game.create!(
-        user: @user,
-        scratch_card: @scratch_card,
-        prize: prize,
-        server_seed: server_seed,
-        game_hash: game_hash,
-        status: :pending
-      )
-      return Result.new(true, game, nil)
     end
-  rescue ActiveRecord::Rollback => e
+  rescue => e
     return Result.new(false, nil, e.message)
   end
 
@@ -38,8 +45,14 @@ class GameCreationService
   end
 
   def draw_prize
-    prizes = @scratch_card.prizes
-    weighted_prizes = prizes.flat_map { |p| [p] * (p.probability * 1000).to_i }
+    available_prizes = @scratch_card.prizes.where("stock > 0 OR stock = -1")
+
+
+    no_win_prize = @scratch_card.prizes.find_by(value_in_cents: 0)
+    return no_win_prize if available_prizes.empty? && no_win_prize
+
+    weighted_prizes = available_prizes.flat_map { |p| [p] * (p.probability * 1000).to_i }
+
     weighted_prizes.sample
   end
 end
