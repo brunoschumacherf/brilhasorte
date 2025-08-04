@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_132546) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_145154) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bonus_codes", force: :cascade do |t|
+    t.string "code", null: false
+    t.float "bonus_percentage", default: 0.0, null: false
+    t.datetime "expires_at"
+    t.integer "max_uses", default: -1
+    t.integer "uses_count", default: 0, null: false
+    t.boolean "is_active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_bonus_codes_on_code", unique: true
+  end
 
   create_table "deposits", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -21,6 +33,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_132546) do
     t.string "gateway_transaction_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "bonus_code_id", null: false
+    t.integer "bonus_in_cents"
+    t.index ["bonus_code_id"], name: "index_deposits_on_bonus_code_id"
     t.index ["gateway_transaction_id"], name: "index_deposits_on_gateway_transaction_id", unique: true
     t.index ["user_id"], name: "index_deposits_on_user_id"
   end
@@ -82,6 +97,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_132546) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "deposits", "bonus_codes"
   add_foreign_key "deposits", "users"
   add_foreign_key "games", "prizes"
   add_foreign_key "games", "scratch_cards"
