@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_210030) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_210629) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -114,6 +114,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_210030) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "withdrawals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "amount_in_cents", null: false
+    t.integer "status", default: 0, null: false
+    t.string "pix_key_type", null: false
+    t.string "pix_key", null: false
+    t.jsonb "gateway_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_withdrawals_on_user_id"
+  end
+
   add_foreign_key "audit_logs", "users"
   add_foreign_key "deposits", "bonus_codes"
   add_foreign_key "deposits", "users"
@@ -122,4 +134,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_210030) do
   add_foreign_key "games", "users"
   add_foreign_key "prizes", "scratch_cards"
   add_foreign_key "users", "users", column: "referred_by_id"
+  add_foreign_key "withdrawals", "users"
 end

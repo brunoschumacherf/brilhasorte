@@ -24,11 +24,12 @@ Rails.application.routes.draw do
       resources :referrals, only: [:index]
       resource :profile, only: [:show, :update], controller: 'profile'
       resources :scratch_cards, only: [:index]
+      resources :withdrawals, only: [:create, :index]
       resources :games, only: [:create, :index] do
         member do
           post :reveal
         end
-        collection do 
+        collection do
           post :play_free_daily
         end
       end

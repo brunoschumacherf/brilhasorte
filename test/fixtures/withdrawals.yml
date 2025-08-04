@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  amount_in_cents: 1
+  status: 1
+  pix_key_type: MyString
+  pix_key: MyString
+  gateway_response: 
+
+two:
+  user: two
+  amount_in_cents: 1
+  status: 1
+  pix_key_type: MyString
+  pix_key: MyString
+  gateway_response: 
