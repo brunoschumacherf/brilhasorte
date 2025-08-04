@@ -1,4 +1,14 @@
 class Api::V1::DepositsController < ApplicationController
+  before_action :authenticate_user!
+
+  def index
+    user_deposits = current_user.deposits.order(created_at: :desc)
+
+    pagy, deposits = pagy(user_deposits, items: 15)
+    pagy_headers_merge(pagy)
+    render json: DepositSerializer.new(deposits).serializable_hash, status: :ok
+  end
+
   def create
     deposit_params = params.require(:deposit).permit(:amount_in_cents)
 

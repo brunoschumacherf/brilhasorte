@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :deposits, only: [:create, :show]
+      resources :deposits, only: [:create, :show, :index]
       post '/webhooks/pix_confirmation', to: 'webhooks#pix_confirmation'
       resource :profile, only: [:show, :update], controller: 'profile'
       resources :scratch_cards, only: [:index]
