@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_013040) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_022254) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "prizes", force: :cascade do |t|
+    t.string "name"
+    t.integer "value_in_cents"
+    t.float "probability"
+    t.integer "stock"
+    t.bigint "scratch_card_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_url"
+    t.index ["scratch_card_id"], name: "index_prizes_on_scratch_card_id"
+  end
+
+  create_table "scratch_cards", force: :cascade do |t|
+    t.string "name"
+    t.integer "price_in_cents"
+    t.text "description"
+    t.string "image_url"
+    t.boolean "is_active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -28,4 +50,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_013040) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "prizes", "scratch_cards"
 end
