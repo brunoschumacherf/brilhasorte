@@ -1,4 +1,3 @@
-# app/controllers/api/v1/admin/games_controller.rb
 class Api::V1::Admin::GamesController < Api::V1::Admin::BaseController
   def index
     @q = Game.includes(:user, :prize, :scratch_card).ransack(params[:q])

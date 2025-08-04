@@ -1,4 +1,3 @@
-# app/controllers/api/v1/admin/users_controller.rb
 class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
   def index
     @q = User.ransack(params[:q])

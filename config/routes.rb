@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       namespace :admin do
         resources :users, only: [:index, :show]
         resources :games, only: [:index, :show]
+        resources :bonus_codes
       end
       resources :deposits, only: [:create, :show, :index]
       post '/webhooks/pix_confirmation', to: 'webhooks#pix_confirmation'
