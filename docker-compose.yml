@@ -38,8 +38,9 @@ services:
   worker:
     build: .
     command: bundle exec sidekiq
+    container_name: brilhasorte_worker
     volumes:
-      - .:/rails
+      - .:/brilhasorte
     depends_on:
       - db
       - redis
@@ -47,6 +48,7 @@ services:
       RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@db:5432/brilhasorte_development
       REDIS_URL: redis://redis:6379/1
+      DEVISE_JWT_SECRET_KEY: <%= Rails.application.credentials.secret_key_base %>
     user: "${UID}:${GID}"  # Mesma ideia aqui
 
 volumes:

@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+
   devise_for :users,
              path: '',
              path_names: {
@@ -8,7 +13,8 @@ Rails.application.routes.draw do
              },
              controllers: {
                sessions: 'users/sessions',
-               registrations: 'users/registrations'
+               registrations: 'users/registrations',
+               passwords: 'users/passwords'
              }
 
   namespace :api do
