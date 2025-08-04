@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :deposits, only: [:create, :show, :index]
       post '/webhooks/pix_confirmation', to: 'webhooks#pix_confirmation'
+      resources :referrals, only: [:index]
       resource :profile, only: [:show, :update], controller: 'profile'
       resources :scratch_cards, only: [:index]
       resources :games, only: [:create, :index] do

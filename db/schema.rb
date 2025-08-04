@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_145154) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_153301) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -92,8 +92,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_145154) do
     t.string "cpf"
     t.date "birth_date"
     t.string "phone_number"
+    t.string "referral_code"
+    t.bigint "referred_by_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti"
+    t.index ["referral_code"], name: "index_users_on_referral_code", unique: true
+    t.index ["referred_by_id"], name: "index_users_on_referred_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -103,4 +107,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_145154) do
   add_foreign_key "games", "scratch_cards"
   add_foreign_key "games", "users"
   add_foreign_key "prizes", "scratch_cards"
+  add_foreign_key "users", "users", column: "referred_by_id"
 end

@@ -21,6 +21,13 @@ class Api::V1::WebhooksController < ApplicationController
       ActiveRecord::Base.transaction do
         deposit.update!(status: :completed, bonus_in_cents: bonus_amount)
         user.increment!(:balance_in_cents, total_credit)
+        if user.referrer.present? && !user.deposits.completed.where.not(id: deposit.id).exists?
+          referrer = user.referrer
+          reward_in_cents = 500 # TO DO DEFINE A REWARD AMOUNT IN DASHBOARD
+          referrer.increment!(:balance_in_cents, reward_in_cents)
+          puts "====== REFERRAL BONUS GRANTED ======"
+          puts "User #{referrer.id} received #{reward_in_cents} cents for referring User #{user.id}"
+        end
       end
       puts "====== DEPOSIT CONFIRMED ======"
       puts "Deposit #{deposit.id} confirmed for User #{deposit.user.id}."
