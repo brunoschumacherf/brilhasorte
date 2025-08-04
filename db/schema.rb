@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_153301) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_205048) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "auditable_type"
+    t.bigint "auditable_id"
+    t.string "action", null: false
+    t.jsonb "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["auditable_type", "auditable_id"], name: "index_audit_logs_on_auditable"
+    t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
 
   create_table "bonus_codes", force: :cascade do |t|
     t.string "code", null: false
@@ -101,6 +113,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_153301) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "audit_logs", "users"
   add_foreign_key "deposits", "bonus_codes"
   add_foreign_key "deposits", "users"
   add_foreign_key "games", "prizes"

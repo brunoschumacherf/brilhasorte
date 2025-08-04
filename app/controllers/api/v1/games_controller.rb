@@ -29,6 +29,15 @@ class Api::V1::GamesController < ApplicationController
     ActiveRecord::Base.transaction do
       game.update!(status: :finished, winnings_in_cents: game.prize.value_in_cents)
       current_user.increment!(:balance_in_cents, game.prize.value_in_cents)
+
+      if game.winnings_in_cents > 0
+        AuditLoggerService.new.call(
+          user: current_user,
+          action: 'game.prize_won',
+          auditable_object: game,
+          details: { winnings: game.winnings_in_cents }
+        )
+      end
     end
 
     options = { params: { reveal_secrets: true } }

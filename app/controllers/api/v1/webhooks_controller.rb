@@ -19,9 +19,21 @@ class Api::V1::WebhooksController < ApplicationController
       total_credit = deposit.amount_in_cents + bonus_amount
 
       ActiveRecord::Base.transaction do
+
+        AuditLoggerService.new.call(
+          user: user,
+          action: 'deposit.completed',
+          auditable_object: deposit,
+          details: { amount: deposit.amount_in_cents, bonus: bonus_amount }
+        )
         deposit.update!(status: :completed, bonus_in_cents: bonus_amount)
         user.increment!(:balance_in_cents, total_credit)
         if user.referrer.present? && !user.deposits.completed.where.not(id: deposit.id).exists?
+          AuditLoggerService.new.call(
+            user: user.referrer,
+            action: 'referral_bonus.granted',
+            details: { from_user_id: user.id, amount: 500 }
+          )
           referrer = user.referrer
           reward_in_cents = 500 # TO DO DEFINE A REWARD AMOUNT IN DASHBOARD
           referrer.increment!(:balance_in_cents, reward_in_cents)

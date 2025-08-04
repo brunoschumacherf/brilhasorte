@@ -4,6 +4,7 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
+    AuditLoggerService.new.call(user: resource, action: 'user.login')
     render json: {
       status: {code: 200, message: 'Logged in successfully.'},
       data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
