@@ -14,9 +14,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :scratch_cards, only: [:index]
-      resources :games, only: [:create]
-      member do
-        post :reveal
+      resources :games, only: [:create, :index] do
+        member do
+          post :reveal
+        end
       end
     end
   end
