@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_022254) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_034205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "games", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "scratch_card_id", null: false
+    t.bigint "prize_id"
+    t.integer "status", default: 0, null: false
+    t.integer "winnings_in_cents", default: 0
+    t.string "server_seed"
+    t.string "game_hash"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_hash"], name: "index_games_on_game_hash", unique: true
+    t.index ["prize_id"], name: "index_games_on_prize_id"
+    t.index ["scratch_card_id"], name: "index_games_on_scratch_card_id"
+    t.index ["user_id"], name: "index_games_on_user_id"
+  end
 
   create_table "prizes", force: :cascade do |t|
     t.string "name"
@@ -50,5 +66,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_022254) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "games", "prizes"
+  add_foreign_key "games", "scratch_cards"
+  add_foreign_key "games", "users"
   add_foreign_key "prizes", "scratch_cards"
 end

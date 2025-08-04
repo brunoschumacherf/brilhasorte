@@ -1,11 +1,8 @@
 #!/bin/bash
-# entrypoint.sh
 set -e
 
-# Remove a potentially pre-existing server.pid for Rails.
-if [ -f  /bin/rails/tmp/pids/server.pid ]; then
-  rm  /bin/rails/tmp/pids/server.pid
-fi
+# Remove um arquivo de pid do servidor pré-existente.
+rm -f /brilhasorte/tmp/pids/server.pid
 
-# Then exec the container's main process (what's set as CMD in the Dockerfile).
+# Então executa o comando principal do container (o "CMD" no Dockerfile).
 exec "$@"

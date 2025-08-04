@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  scratch_card: one
+  prize: one
+  status: 1
+  winnings_in_cents: 1
+  server_seed: MyString
+  game_hash: MyString
+
+two:
+  user: two
+  scratch_card: two
+  prize: two
+  status: 1
+  winnings_in_cents: 1
+  server_seed: MyString
+  game_hash: MyString
