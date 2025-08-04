@@ -19,6 +19,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      namespace :admin do
+        resources :users, only: [:index, :show] 
+      end
       resources :deposits, only: [:create, :show, :index]
       post '/webhooks/pix_confirmation', to: 'webhooks#pix_confirmation'
       resources :referrals, only: [:index]
