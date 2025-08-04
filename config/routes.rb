@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       resource :profile, only: [:show, :update], controller: 'profile'
       resources :scratch_cards, only: [:index]
       resources :withdrawals, only: [:create, :index]
+      resources :rankings, only: [:index]
       resources :games, only: [:create, :index] do
         member do
           post :reveal
