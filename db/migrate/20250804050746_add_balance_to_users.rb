@@ -1,5 +1,5 @@
 class AddBalanceToUsers < ActiveRecord::Migration[7.1]
   def change
-    add_column :users, :balance_in_cents, :integer
+    add_column :users, :balance_in_cents, :bigint, default: 0, null: false
   end
 end

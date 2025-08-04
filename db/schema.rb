@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_050746) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_132546) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "deposits", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "amount_in_cents", null: false
+    t.integer "status", default: 0, null: false
+    t.string "gateway_transaction_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["gateway_transaction_id"], name: "index_deposits_on_gateway_transaction_id", unique: true
+    t.index ["user_id"], name: "index_deposits_on_user_id"
+  end
 
   create_table "games", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -62,11 +73,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_050746) do
     t.datetime "updated_at", null: false
     t.string "jti"
     t.integer "balance_in_cents"
+    t.string "full_name"
+    t.string "cpf"
+    t.date "birth_date"
+    t.string "phone_number"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "deposits", "users"
   add_foreign_key "games", "prizes"
   add_foreign_key "games", "scratch_cards"
   add_foreign_key "games", "users"
