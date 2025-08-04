@@ -28,6 +28,9 @@ Rails.application.routes.draw do
         member do
           post :reveal
         end
+        collection do 
+          post :play_free_daily
+        end
       end
     end
   end

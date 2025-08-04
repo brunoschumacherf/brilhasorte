@@ -13,7 +13,7 @@ class GameCreationService
           return Result.new(false, nil, "Saldo insuficiente")
         end
 
-        prize = draw_prize
+        prize = @scratch_card.draw_prize
         return Result.new(false, nil, "Não foi possível gerar o jogo. Tente novamente.") unless prize
 
         @user.decrement!(:balance_in_cents, @scratch_card.price_in_cents)
@@ -44,15 +44,4 @@ class GameCreationService
     @user.balance_in_cents >= @scratch_card.price_in_cents
   end
 
-  def draw_prize
-    available_prizes = @scratch_card.prizes.where("stock > 0 OR stock = -1")
-
-
-    no_win_prize = @scratch_card.prizes.find_by(value_in_cents: 0)
-    return no_win_prize if available_prizes.empty? && no_win_prize
-
-    weighted_prizes = available_prizes.flat_map { |p| [p] * (p.probability * 1000).to_i }
-
-    weighted_prizes.sample
-  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_205048) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_210030) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -106,6 +106,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_205048) do
     t.string "phone_number"
     t.string "referral_code"
     t.bigint "referred_by_id"
+    t.datetime "last_free_game_claimed_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti"
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true

@@ -81,5 +81,28 @@ Prize.create!([
   }
 ])
 
+puts "Creating Daily Free Scratch Card..."
+free_card = ScratchCard.create!(
+  name: "Chance Grátis Diária",
+  price_in_cents: 0,
+  description: "Sua chance grátis de ganhar um prêmio todos os dias! Volte amanhã para mais.",
+  image_url: "https://example.com/images/cards/free_daily.png"
+)
+
+Prize.create!([
+  {
+    scratch_card: free_card,
+    name: "Prêmio de R$ 1,00",
+    value_in_cents: 100,
+    probability: 0.05 # 5% de chance
+  },
+  {
+    scratch_card: free_card,
+    name: "Não foi dessa vez",
+    value_in_cents: 0,
+    probability: 0.95 # 95% de chance
+  }
+])
+
 puts "Finished seeding!"
 puts "Created #{ScratchCard.count} scratch cards and #{Prize.count} prizes."
