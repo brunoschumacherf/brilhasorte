@@ -29,6 +29,7 @@ services:
       - db
       - redis
     environment:
+      DEVISE_JWT_SECRET_KEY: <%= Rails.application.credentials.secret_key_base %>
       RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@db:5432/brilhasorte_development
       REDIS_URL: redis://redis:6379/1
