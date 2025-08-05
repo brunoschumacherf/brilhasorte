@@ -45,8 +45,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
     t.string "gateway_transaction_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "bonus_code_id", null: false
-    t.integer "bonus_in_cents"
+    t.bigint "bonus_code_id"
+    t.integer "bonus_in_cents", default: 0
     t.index ["bonus_code_id"], name: "index_deposits_on_bonus_code_id"
     t.index ["gateway_transaction_id"], name: "index_deposits_on_gateway_transaction_id", unique: true
     t.index ["user_id"], name: "index_deposits_on_user_id"
@@ -69,10 +69,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
   end
 
   create_table "prizes", force: :cascade do |t|
-    t.string "name"
-    t.integer "value_in_cents"
-    t.float "probability"
-    t.integer "stock"
+    t.string "name", null: false
+    t.integer "value_in_cents", default: 0, null: false
+    t.float "probability", default: 0.0, null: false
+    t.integer "stock", default: -1
     t.bigint "scratch_card_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -81,13 +81,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
   end
 
   create_table "scratch_cards", force: :cascade do |t|
-    t.string "name"
-    t.integer "price_in_cents"
+    t.string "name", null: false
+    t.integer "price_in_cents", default: 0, null: false
     t.text "description"
     t.string "image_url"
-    t.boolean "is_active"
+    t.boolean "is_active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_scratch_cards_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -99,7 +100,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "jti"
-    t.integer "balance_in_cents"
+    t.bigint "balance_in_cents", default: 0, null: false
     t.string "full_name"
     t.string "cpf"
     t.date "birth_date"
@@ -108,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
     t.bigint "referred_by_id"
     t.datetime "last_free_game_claimed_at"
     t.boolean "admin", default: false, null: false
+    t.index ["cpf"], name: "index_users_on_cpf", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti"
     t.index ["referral_code"], name: "index_users_on_referral_code", unique: true

@@ -1,6 +1,5 @@
 class Api::V1::RankingsController < ApplicationController
 
-  skip_before_action :authenticate_user!
 
   def index
     period = params[:period] || 'weekly'

@@ -28,7 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     super(hash).tap do |user|
       if referral_code.present?
         referrer = User.find_by(referral_code: referral_code.upcase)
-        user.referrer = referrer if referrer
+        user.referred_by = referrer if referrer
       end
     end
   end

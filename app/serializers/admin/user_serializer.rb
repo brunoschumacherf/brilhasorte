@@ -5,7 +5,7 @@ class Admin::UserSerializer
              :balance_in_cents, :referral_code, :admin,
              :created_at, :updated_at
 
-  belongs_to :referrer, serializer: UserSerializer # Mostra quem indicou este usuário
+  belongs_to :referred_by, serializer: UserSerializer
 
   attribute :games_count do |user|
     user.games.count

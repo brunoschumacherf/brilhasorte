@@ -13,6 +13,9 @@ class User < ApplicationRecord
 
   after_create :generate_referral_code
 
+  def can_claim_daily_free_game?
+    self.last_free_game_claimed_at.nil? || self.last_free_game_claimed_at < 24.hours.ago
+  end
 
   private
 
@@ -26,7 +29,4 @@ class User < ApplicationRecord
     self.update_column(:referral_code, self.referral_code)
   end
 
-  def can_claim_daily_free_game?
-    self.last_free_game_claimed_at.nil? || self.last_free_game_claimed_at < 24.hours.ago
-  end
 end
