@@ -39,8 +39,7 @@ class Api::V1::GamesController < ApplicationController
         )
       end
     end
-
-    options = { params: { reveal_secrets: true } }
+    options = { params: { reveal_secrets: true }, include: [:prize] }
     render json: GameSerializer.new(game, options).serializable_hash, status: :ok
 
   rescue ActiveRecord::RecordNotFound

@@ -1,5 +1,7 @@
 class Users::SessionsController < Devise::SessionsController
   respond_to :json
+  include ActionController::Flash
+
 
   private
 
