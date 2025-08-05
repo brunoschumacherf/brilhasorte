@@ -26,7 +26,7 @@ class Api::V1::DepositsController < ApplicationController
       gateway_transaction_id: gateway_id,
       bonus_code: bonus_code
     )
-
+    puts gateway_id
     if deposit.save
       render json: DepositSerializer.new(deposit).serializable_hash, status: :created
     else

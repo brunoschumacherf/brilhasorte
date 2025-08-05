@@ -5,8 +5,11 @@ class User < ApplicationRecord
          :recoverable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
-  has_many :referees, class_name: "User", foreign_key: "referred_by_id"
-  belongs_to :referrer, class_name: "User", foreign_key: "referred_by_id", optional: true
+  has_many :referred_users, class_name: "User", foreign_key: "referred_by_id"
+  belongs_to :referred_by, class_name: "User", foreign_key: "referred_by_id", optional: true
+  has_many :deposits
+  has_many :withdrawals
+  has_many :games
 
   after_create :generate_referral_code
 

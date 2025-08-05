@@ -1,4 +1,3 @@
-# app/controllers/api/v1/withdrawals_controller.rb
 class Api::V1::WithdrawalsController < ApplicationController
   before_action :authenticate_user!
 
