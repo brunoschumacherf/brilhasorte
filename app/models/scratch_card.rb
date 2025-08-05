@@ -9,7 +9,6 @@ class ScratchCard < ApplicationRecord
   def draw_prize
     available_prizes = self.prizes.where("stock > 0 OR stock = -1")
     no_win_prize = self.prizes.find_by(value_in_cents: 0)
-
     return no_win_prize if available_prizes.empty? && no_win_prize
 
     weighted_prizes = available_prizes.flat_map { |p| [p] * (p.probability * 1000).to_i }

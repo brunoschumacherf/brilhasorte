@@ -17,6 +17,11 @@ class User < ApplicationRecord
     self.last_free_game_claimed_at.nil? || self.last_free_game_claimed_at < 24.hours.ago
   end
 
+  # TO DO remove this method when the frontend is updated
+  def can_claim_daily_game
+    can_claim_daily_free_game?
+  end
+
   private
 
   def generate_referral_code
