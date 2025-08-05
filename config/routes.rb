@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :admin do
+        resource :dashboard, only: [:show], controller: 'dashboards'
         resources :users, only: [:index, :show]
         resources :games, only: [:index, :show]
         resources :deposits, only: [:index, :show]
