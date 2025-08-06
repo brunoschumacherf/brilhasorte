@@ -7,4 +7,9 @@ class Game < ApplicationRecord
   enum status: { pending: 0, finished: 1 }
 
   validates :game_hash, presence: true, uniqueness: true
+
+  # TO DO: Gambeta
+  def scratch_card_prize
+    scratch_card.prizes
+  end
 end
