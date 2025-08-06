@@ -8,7 +8,6 @@ class GameSerializer
   }
 
   belongs_to :scratch_card
-  belongs_to :prize, if: Proc.new { |record, params|
-    params && params[:reveal_secrets] == true
-  }
+
+  belongs_to :prize
 end

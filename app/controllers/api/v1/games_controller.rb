@@ -22,6 +22,21 @@ class Api::V1::GamesController < ApplicationController
     end
   end
 
+  def show
+    game = current_user.games.includes(:prize, :scratch_card).find(params[:id])
+
+    options = { include: [:prize, :scratch_card] }
+
+    if game.finished?
+      options[:params] = { reveal_secrets: true }
+    end
+
+    render json: GameSerializer.new(game, options).serializable_hash, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Jogo não encontrado." }, status: :not_found
+  end
+
+
 
   def reveal
     game = current_user.games.find_by!(id: params[:id], status: :pending)
