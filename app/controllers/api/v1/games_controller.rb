@@ -2,31 +2,24 @@ class Api::V1::GamesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    user_games = current_user.games.order(created_at: :desc)
+    # --- CORREÇÃO AQUI ---
+    # Garantimos que as associações sejam pré-carregadas de forma explícita
+    # para evitar o problema de N+1 queries e garantir que o serializer tenha os dados.
+    user_games_query = current_user.games.includes(:prize, :scratch_card).order(created_at: :desc)
 
-    pagy, games = pagy(user_games, items: 10)
-
+    pagy, games = pagy(user_games_query, items: 10)
     pagy_headers_merge(pagy)
-    options = { params: { reveal_secrets: true } }
+
+    options = {
+      params: { reveal_secrets: true }
+    }
     render json: GameSerializer.new(games, options).serializable_hash, status: :ok
-  end
-
-  def create
-    scratch_card = ScratchCard.find(params[:scratch_card_id])
-    result = GameCreationService.new(current_user, scratch_card).call
-
-    if result.success?
-      render json: GameSerializer.new(result.game).serializable_hash, status: :created
-    else
-      render json: { error: result.error_message }, status: :unprocessable_entity
-    end
   end
 
   def show
     game = current_user.games.includes(:prize, :scratch_card).find(params[:id])
 
     options = { include: [:prize, :scratch_card] }
-
     if game.finished?
       options[:params] = { reveal_secrets: true }
     end
@@ -36,7 +29,17 @@ class Api::V1::GamesController < ApplicationController
     render json: { error: "Jogo não encontrado." }, status: :not_found
   end
 
+  def create
+    scratch_card = ScratchCard.find(params[:scratch_card_id])
+    result = GameCreationService.new(current_user, scratch_card).call
 
+    if result.success?
+      # Atualiza o saldo no front-end imediatamente após a compra
+      render json: GameSerializer.new(result.game, { meta: { user: { balance_in_cents: result.user.balance_in_cents } } }).serializable_hash, status: :created
+    else
+      render json: { error: result.error_message }, status: :unprocessable_entity
+    end
+  end
 
   def reveal
     game = current_user.games.find_by!(id: params[:id], status: :pending)
@@ -54,6 +57,7 @@ class Api::V1::GamesController < ApplicationController
         )
       end
     end
+
     options = { params: { reveal_secrets: true }, include: [:prize] }
     render json: GameSerializer.new(game, options).serializable_hash, status: :ok
 
@@ -78,9 +82,7 @@ class Api::V1::GamesController < ApplicationController
 
     game = nil
     ActiveRecord::Base.transaction do
-
       current_user.update!(last_free_game_claimed_at: Time.current)
-
       server_seed = SecureRandom.hex(16)
       game_hash = Digest::SHA256.hexdigest("#{server_seed}-#{prize.id}")
 
