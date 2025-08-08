@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :deposits
   has_many :withdrawals
   has_many :games
+  has_many :tickets
+  has_many :ticket_replies
 
   after_create :generate_referral_code
 

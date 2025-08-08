@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_08_161700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -91,6 +91,27 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
     t.index ["name"], name: "index_scratch_cards_on_name", unique: true
   end
 
+  create_table "ticket_replies", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "ticket_id", null: false
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ticket_id"], name: "index_ticket_replies_on_ticket_id"
+    t.index ["user_id"], name: "index_ticket_replies_on_user_id"
+  end
+
+  create_table "tickets", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "subject"
+    t.integer "status", default: 0
+    t.string "ticket_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ticket_number"], name: "index_tickets_on_ticket_number", unique: true
+    t.index ["user_id"], name: "index_tickets_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -136,6 +157,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_212435) do
   add_foreign_key "games", "scratch_cards"
   add_foreign_key "games", "users"
   add_foreign_key "prizes", "scratch_cards"
+  add_foreign_key "ticket_replies", "tickets"
+  add_foreign_key "ticket_replies", "users"
+  add_foreign_key "tickets", "users"
   add_foreign_key "users", "users", column: "referred_by_id"
   add_foreign_key "withdrawals", "users"
 end
