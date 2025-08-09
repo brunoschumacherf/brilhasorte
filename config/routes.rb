@@ -53,6 +53,11 @@ Rails.application.routes.draw do
       resources :scratch_cards, only: [:index]
       resources :withdrawals, only: [:create, :index]
       resources :rankings, only: [:index]
+      resources :plinko, only: [:create] do
+        collection do
+          get :multipliers
+        end
+      end
       resources :games, only: [:create, :index, :show] do
         member do
           post :reveal

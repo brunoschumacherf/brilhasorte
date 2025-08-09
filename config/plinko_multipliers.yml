@@ -1,0 +1,14 @@
+# Estrutura: <numero_de_linhas>: <nivel_de_risco>: [multiplicadores]
+# Os multiplicadores correspondem às posições finais, da esquerda para a direita.
+# A bola sempre cairá em uma das N+1 posições possíveis (onde N é o número de linhas).
+
+8:
+  low: [5.6, 2.1, 1.1, 1, 0.5, 1, 1.1, 2.1, 5.6]
+  medium: [13, 3, 1.3, 0.7, 0.4, 0.7, 1.3, 3, 13]
+  high: [29, 4, 1.5, 0.3, 0.2, 0.3, 1.5, 4, 29]
+16:
+  low: [16, 9, 2, 1.4, 1.1, 1, 0.5, 1.2, 1.5, 1.2, 0.5, 1, 1.1, 1.4, 2, 9, 16]
+  medium: [22, 11, 8, 3, 1.5, 1.1, 1, 0.5, 0.3, 0.5, 1, 1.1, 1.5, 3, 8, 11, 22]
+  high: [1000, 130, 50, 20, 10, 5, 3, 2, 1.5, 1.2, 1.1, 1.2, 1.5, 2, 3, 5, 10, 20, 50, 130, 1000]
+
+# Adicione aqui outras configurações de linhas (9, 10, 11... até 15)
