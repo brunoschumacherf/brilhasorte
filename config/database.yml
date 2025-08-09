@@ -12,5 +12,3 @@ test:
 
 production:
   <<: *default
-  username: <%= ENV["BRILHASORTE_DATABASE_USERNAME"] %>
-  password: <%= ENV["BRILHASORTE_DATABASE_PASSWORD"] %>
