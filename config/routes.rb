@@ -24,7 +24,9 @@ Rails.application.routes.draw do
         resources :users, only: [:index, :show]
         resources :games, only: [:index, :show]
         resources :deposits, only: [:index, :show]
-        resources :withdrawals, only: [:index, :show]
+        resources :withdrawals, only: [:index, :show] do
+          patch :approve, on: :member
+        end
         resources :bonus_codes
         resources :scratch_cards
         resources :plinko_games, only: [:index]

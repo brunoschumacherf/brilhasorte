@@ -5,7 +5,10 @@ class Api::V1::Admin::GamesController < Api::V1::Admin::BaseController
     pagy, games = pagy(@q.result.order(created_at: :desc), items: 20)
 
     pagy_headers_merge(pagy)
-    render json: Admin::GameSerializer.new(games).serializable_hash, status: :ok
+    options = {
+      include: [:user, :prize, :scratch_card]
+    }
+    render json: Admin::GameSerializer.new(games, options).serializable_hash, status: :ok
   end
 
   def show
