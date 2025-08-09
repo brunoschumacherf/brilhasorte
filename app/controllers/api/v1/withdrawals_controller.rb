@@ -2,6 +2,11 @@ class Api::V1::WithdrawalsController < ApplicationController
   before_action :authenticate_user!
 
   def create
+    if current_user.cpf.blank?
+      return render json: { error: "CPF não cadastrado. Por favor, cadastre seu CPF no perfil." }, status: :unprocessable_entity
+    end
+    params[:withdrawal][:pix_key] = current_user.cpf
+    params[:withdrawal][:pix_key_type] = 'cpf'
     withdrawal_params = params.require(:withdrawal).permit(:amount_in_cents, :pix_key_type, :pix_key)
     amount_to_withdraw = withdrawal_params[:amount_in_cents].to_i
 

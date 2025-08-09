@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_08_161700) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_09_021629) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,6 +66,32 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_08_161700) do
     t.index ["prize_id"], name: "index_games_on_prize_id"
     t.index ["scratch_card_id"], name: "index_games_on_scratch_card_id"
     t.index ["user_id"], name: "index_games_on_user_id"
+  end
+
+  create_table "mines_games", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "bet_amount", null: false
+    t.integer "mines_count", null: false
+    t.jsonb "grid", null: false
+    t.jsonb "revealed_tiles", default: []
+    t.string "state", default: "active", null: false
+    t.string "payout_multiplier", default: "1.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_mines_games_on_user_id"
+  end
+
+  create_table "plinko_games", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "bet_amount", null: false
+    t.integer "rows", null: false
+    t.string "risk", null: false
+    t.jsonb "path", null: false
+    t.string "multiplier", null: false
+    t.integer "winnings", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_plinko_games_on_user_id"
   end
 
   create_table "prizes", force: :cascade do |t|
@@ -156,6 +182,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_08_161700) do
   add_foreign_key "games", "prizes"
   add_foreign_key "games", "scratch_cards"
   add_foreign_key "games", "users"
+  add_foreign_key "mines_games", "users"
+  add_foreign_key "plinko_games", "users"
   add_foreign_key "prizes", "scratch_cards"
   add_foreign_key "ticket_replies", "tickets"
   add_foreign_key "ticket_replies", "users"

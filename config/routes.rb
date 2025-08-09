@@ -24,13 +24,24 @@ Rails.application.routes.draw do
         resources :users, only: [:index, :show]
         resources :games, only: [:index, :show]
         resources :deposits, only: [:index, :show]
-        resources :withdrawals, only: [:index, :show]
+        resources :withdrawals, only: [:index, :show] do
+          patch :approve, on: :member
+        end
         resources :bonus_codes
         resources :scratch_cards
+        resources :plinko_games, only: [:index]
         resources :tickets, only: [:index, :show], param: :ticket_number do
           member do
             post :reply, to: 'tickets#create_reply'
           end
+        end
+        resources :mines_games, only: [:index]
+      end
+      resources :mines, only: [:create] do
+        collection do
+          post :reveal
+          post :cashout
+          get  :active
         end
       end
       resources :tickets, only: [:index, :show, :create], param: :ticket_number do
@@ -45,6 +56,11 @@ Rails.application.routes.draw do
       resources :scratch_cards, only: [:index]
       resources :withdrawals, only: [:create, :index]
       resources :rankings, only: [:index]
+      resources :plinko, only: [:create] do
+        collection do
+          get :multipliers
+        end
+      end
       resources :games, only: [:create, :index, :show] do
         member do
           post :reveal
