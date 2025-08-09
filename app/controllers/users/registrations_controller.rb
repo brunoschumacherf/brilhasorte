@@ -18,10 +18,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
 
   def sign_up_params
-    devise_parameter_sanitizer.sanitize(:sign_up).tap do |params|
-      params[:referral_code] = params[:referral_code]
-    end
+    params.require(:user).permit(:email, :password, :password_confirmation,
+                                 :full_name, :cpf, :phone_number, :birth_date, :referral_code)
   end
+  # ----------------------------
 
   def build_resource(hash)
     referral_code = hash.delete(:referral_code)
