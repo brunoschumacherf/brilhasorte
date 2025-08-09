@@ -27,6 +27,7 @@ Rails.application.routes.draw do
         resources :withdrawals, only: [:index, :show]
         resources :bonus_codes
         resources :scratch_cards
+        resources :plinko_games, only: [:index]
         resources :tickets, only: [:index, :show], param: :ticket_number do
           member do
             post :reply, to: 'tickets#create_reply'
