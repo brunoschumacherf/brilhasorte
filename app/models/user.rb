@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :games
   has_many :tickets
   has_many :ticket_replies
+  has_many :mines_games
 
   after_create :generate_referral_code
 

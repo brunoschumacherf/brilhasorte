@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  bet_amount: 1
+  mines_count: 1
+  grid: 
+  revealed_tiles: 
+  state: MyString
+  payout_multiplier: MyString
+
+two:
+  user: two
+  bet_amount: 1
+  mines_count: 1
+  grid: 
+  revealed_tiles: 
+  state: MyString
+  payout_multiplier: MyString

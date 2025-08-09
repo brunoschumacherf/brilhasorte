@@ -33,6 +33,13 @@ Rails.application.routes.draw do
           end
         end
       end
+      resources :mines, only: [:create] do
+        collection do
+          post :reveal
+          post :cashout
+          get  :active
+        end
+      end
       resources :tickets, only: [:index, :show, :create], param: :ticket_number do
         member do
           post :reply, to: 'tickets#create_reply'
