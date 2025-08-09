@@ -32,6 +32,7 @@ Rails.application.routes.draw do
             post :reply, to: 'tickets#create_reply'
           end
         end
+        resources :mines_games, only: [:index]
       end
       resources :mines, only: [:create] do
         collection do
