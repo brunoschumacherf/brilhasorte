@@ -13,7 +13,7 @@ module Api
         result = service.call
 
         if result.success?
-          render json: result.payload, status: :created
+          render json: MinesGameSerializer.new(result.payload).serializable_hash, status: :ok
         else
           render json: { errors: result.errors }, status: :unprocessable_entity
         end
@@ -24,7 +24,7 @@ module Api
         result = service.call
 
         if result.success?
-          render json: result.payload, status: :ok
+          render json: { status: result.payload[:status] , payload: MinesGameSerializer.new(result.payload[:game]).serializable_hash }, status: :ok
         else
           render json: { errors: result.errors }, status: :unprocessable_entity
         end
@@ -38,8 +38,7 @@ module Api
           @game.update!(state: 'cashed_out')
           current_user.update!(balance_in_cents: current_user.balance_in_cents + winnings)
         end
-
-        render json: { status: 'cashed_out', winnings: winnings, game: @game }, status: :ok
+        render json: { status: 'cashed_out', winnings: winnings, payload: MinesGameSerializer.new(@game).serializable_hash }, status: :ok
       rescue ActiveRecord::RecordInvalid => e
         render json: { error: "Falha no cash out: #{e.message}" }, status: :internal_server_error
       end

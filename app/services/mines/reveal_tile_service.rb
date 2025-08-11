@@ -40,7 +40,7 @@ module Mines
 
       game.update!(
         revealed_tiles: new_revealed_tiles,
-        payout_multiplier: new_multiplier_str
+        payout_multiplier: new_multiplier_str,
       )
     end
   end

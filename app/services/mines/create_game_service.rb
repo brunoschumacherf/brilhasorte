@@ -47,7 +47,6 @@ module Mines
     end
 
     def debit_from_balance
-      # CORREÇÃO AQUI
       user.update!(balance_in_cents: user.balance_in_cents - bet_amount)
     end
 
