@@ -32,6 +32,7 @@ services:
       RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@db:5432/brilhasorte_development
       REDIS_URL: redis://redis:6379/1
+      MP_ACCESS_TOKEN: 'XIU'
     user: "${UID}:${GID}"  # Usa o mesmo UID/GID do host para evitar erro de permissão
 
   worker:
