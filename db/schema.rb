@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_09_021629) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_12_215847) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -138,6 +138,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_09_021629) do
     t.index ["user_id"], name: "index_tickets_on_user_id"
   end
 
+  create_table "tower_games", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "difficulty", null: false
+    t.integer "bet_amount_in_cents", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "current_level", default: 0, null: false
+    t.decimal "payout_multiplier", precision: 10, scale: 4, default: "1.0"
+    t.integer "winnings_in_cents", default: 0
+    t.jsonb "levels_layout", default: [], null: false
+    t.jsonb "player_choices", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_tower_games_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -188,6 +203,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_09_021629) do
   add_foreign_key "ticket_replies", "tickets"
   add_foreign_key "ticket_replies", "users"
   add_foreign_key "tickets", "users"
+  add_foreign_key "tower_games", "users"
   add_foreign_key "users", "users", column: "referred_by_id"
   add_foreign_key "withdrawals", "users"
 end

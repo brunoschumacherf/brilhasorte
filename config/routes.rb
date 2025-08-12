@@ -56,6 +56,16 @@ Rails.application.routes.draw do
       resources :scratch_cards, only: [:index]
       resources :withdrawals, only: [:create, :index]
       resources :rankings, only: [:index]
+      get 'game_settings/tower', to: 'game_settings#tower'
+      resources :tower_games, only: [:create] do
+        member do
+          post :play
+          post :cash_out
+        end
+        collection do
+          get :active_game
+        end
+      end
       resources :plinko, only: [:create] do
         collection do
           get :multipliers
