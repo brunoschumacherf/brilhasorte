@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_12_231427) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_13_015855) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,28 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_231427) do
     t.index ["bonus_code_id"], name: "index_deposits_on_bonus_code_id"
     t.index ["gateway_transaction_id"], name: "index_deposits_on_gateway_transaction_id", unique: true
     t.index ["user_id"], name: "index_deposits_on_user_id"
+  end
+
+  create_table "double_game_bets", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "double_game_round_id", null: false
+    t.integer "bet_amount_in_cents", null: false
+    t.integer "color", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "winnings_in_cents"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["double_game_round_id"], name: "index_double_game_bets_on_double_game_round_id"
+    t.index ["user_id"], name: "index_double_game_bets_on_user_id"
+  end
+
+  create_table "double_game_rounds", force: :cascade do |t|
+    t.integer "status", default: 0, null: false
+    t.string "winning_color"
+    t.string "round_hash", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_double_game_rounds_on_status"
   end
 
   create_table "games", force: :cascade do |t|
@@ -206,6 +228,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_231427) do
   add_foreign_key "audit_logs", "users"
   add_foreign_key "deposits", "bonus_codes"
   add_foreign_key "deposits", "users"
+  add_foreign_key "double_game_bets", "double_game_rounds"
+  add_foreign_key "double_game_bets", "users"
   add_foreign_key "games", "prizes"
   add_foreign_key "games", "scratch_cards"
   add_foreign_key "games", "users"

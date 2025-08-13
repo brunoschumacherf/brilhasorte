@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  double_game_round: one
+  bet_amount_in_cents: 1
+  color: 1
+  status: 1
+  winnings_in_cents: 1
+
+two:
+  user: two
+  double_game_round: two
+  bet_amount_in_cents: 1
+  color: 1
+  status: 1
+  winnings_in_cents: 1
