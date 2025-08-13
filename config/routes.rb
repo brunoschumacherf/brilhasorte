@@ -24,6 +24,8 @@ Rails.application.routes.draw do
         resources :users, only: [:index, :show]
         resources :games, only: [:index, :show]
         resources :deposits, only: [:index, :show]
+        resources :tower_games, only: [:index]
+        resources :limbo_games, only: [:index]
         resources :withdrawals, only: [:index, :show] do
           patch :approve, on: :member
         end
