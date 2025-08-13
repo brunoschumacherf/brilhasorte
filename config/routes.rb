@@ -57,6 +57,11 @@ Rails.application.routes.draw do
       resources :withdrawals, only: [:create, :index]
       resources :rankings, only: [:index]
       get 'game_settings/tower', to: 'game_settings#tower'
+      resources :limbo_games, only: [:create] do
+        collection do
+          get :history
+        end
+      end
       resources :tower_games, only: [:create] do
         member do
           post :play
