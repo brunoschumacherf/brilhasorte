@@ -14,7 +14,8 @@ class User < ApplicationRecord
   has_many :ticket_replies
   has_many :mines_games
   has_many :plinko_games
-
+  has_many :tower_games
+  has_many :limbo_games
 
   after_create :generate_referral_code
 

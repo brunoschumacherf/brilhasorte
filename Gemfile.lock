@@ -105,6 +105,7 @@ GEM
     devise-jwt (0.12.1)
       devise (~> 4.0)
       warden-jwt_auth (~> 0.10)
+    domain_name (0.6.20240107)
     drb (2.2.3)
     dry-auto_inject (1.1.0)
       dry-core (~> 1.1)
@@ -120,6 +121,9 @@ GEM
     erubi (1.13.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    http-accept (1.7.0)
+    http-cookie (1.0.8)
+      domain_name (~> 0.5)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     io-console (0.8.1)
@@ -153,6 +157,13 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
+    mercadopago-sdk (2.3.0)
+      json (~> 2.5)
+      rest-client (~> 2.1)
+    mime-types (3.7.0)
+      logger
+      mime-types-data (~> 3.2025, >= 3.2025.0507)
+    mime-types-data (3.2025.0805)
     mini_mime (1.1.5)
     minitest (5.25.5)
     msgpack (1.8.0)
@@ -166,6 +177,7 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
+    netrc (0.11.0)
     nio4r (2.7.4)
     nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
@@ -241,6 +253,11 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rexml (3.4.1)
     securerandom (0.4.1)
     sidekiq (8.0.6)
@@ -277,6 +294,7 @@ DEPENDENCIES
   devise-jwt
   jsonapi-serializer
   letter_opener_web
+  mercadopago-sdk
   pagy
   pg (~> 1.1)
   puma (>= 5.0)

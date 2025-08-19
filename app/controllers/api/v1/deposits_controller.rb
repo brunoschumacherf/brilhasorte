@@ -10,27 +10,14 @@ class Api::V1::DepositsController < ApplicationController
   end
 
   def create
-    deposit_params = params.require(:deposit).permit(:amount_in_cents, :bonus_code)
-    bonus_code_str = deposit_params[:bonus_code]&.upcase
-    bonus_code = find_valid_bonus_code(bonus_code_str)
+    service = CreateDepositService.new(current_user, deposit_params)
+    service.call
 
-    if bonus_code && current_user.deposits.where(bonus_code: bonus_code, status: :completed).exists?
-      render json: { error: "Você já utilizou este código de bônus." }, status: :unprocessable_entity
-      return
-    end
-
-    gateway_id = "dep_#{SecureRandom.hex(10)}"
-    deposit = current_user.deposits.new(
-      amount_in_cents: deposit_params[:amount_in_cents],
-      status: :pending,
-      gateway_transaction_id: gateway_id,
-      bonus_code: bonus_code
-    )
-    puts gateway_id
-    if deposit.save
-      render json: DepositSerializer.new(deposit).serializable_hash, status: :created
+    if service.success?
+      serializer_options = { params: { gateway_response: service.instance_variable_get(:@mp_result) } }
+      render json: DepositSerializer.new(service.deposit, serializer_options).serializable_hash, status: :created
     else
-      render json: { errors: deposit.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: service.errors }, status: :unprocessable_entity
     end
   end
 
@@ -42,18 +29,8 @@ class Api::V1::DepositsController < ApplicationController
   end
 
   private
-  def find_valid_bonus_code(code_str)
-    return nil if code_str.blank?
 
-    code = BonusCode.find_by(code: code_str)
-    return nil unless code&.is_active
-
-    # Verifica se o código expirou
-    return nil if code.expires_at && code.expires_at < Time.current
-
-    # Verifica se o limite de usos foi atingido
-    return nil if code.max_uses != -1 && code.uses_count >= code.max_uses
-
-    code
+  def deposit_params
+    params.require(:deposit).permit(:amount_in_cents, :bonus_code)
   end
 end
