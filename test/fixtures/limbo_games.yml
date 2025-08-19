@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  bet_amount_in_cents: 1
+  target_multiplier: 9.99
+  result_multiplier: 9.99
+  winnings_in_cents: 1
+  status: 1
+
+two:
+  user: two
+  bet_amount_in_cents: 1
+  target_multiplier: 9.99
+  result_multiplier: 9.99
+  winnings_in_cents: 1
+  status: 1

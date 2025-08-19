@@ -1,0 +1,7 @@
+
+house_edge_percentage: 1
+
+probability_distribution:
+  - { from: 1.01, to: 1.10, weight: 69.3 }
+  - { from: 1.11, to: 1.99, weight: 29.7 } 
+  - { from: 2.00, to: 100000.0, weight: 1.0 }

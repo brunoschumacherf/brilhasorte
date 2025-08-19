@@ -1,0 +1,12 @@
+betting_duration: 30 
+spinning_duration: 5
+
+multipliers:
+  black: 2
+  red: 2
+  white: 14
+
+probabilities:
+  black: 49.9
+  red: 49.9
+  white: 0.2

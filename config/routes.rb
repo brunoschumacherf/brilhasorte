@@ -24,6 +24,9 @@ Rails.application.routes.draw do
         resources :users, only: [:index, :show]
         resources :games, only: [:index, :show]
         resources :deposits, only: [:index, :show]
+        resources :tower_games, only: [:index]
+        resources :limbo_games, only: [:index]
+        resources :double_games, only: [:index]
         resources :withdrawals, only: [:index, :show] do
           patch :approve, on: :member
         end
@@ -56,6 +59,24 @@ Rails.application.routes.draw do
       resources :scratch_cards, only: [:index]
       resources :withdrawals, only: [:create, :index]
       resources :rankings, only: [:index]
+      get 'game_settings/tower', to: 'game_settings#tower'
+      post 'double_games/place_bet', to: 'double_games#place_bet'
+      post 'double_games/trigger_draw', to: 'double_games#trigger_draw'
+      get 'double_games/history', to: 'double_games#history'
+      resources :limbo_games, only: [:create] do
+        collection do
+          get :history
+        end
+      end
+      resources :tower_games, only: [:create] do
+        member do
+          post :play
+          post :cash_out
+        end
+        collection do
+          get :active_game
+        end
+      end
       resources :plinko, only: [:create] do
         collection do
           get :multipliers

@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  difficulty: MyString
+  bet_amount_in_cents: 1
+  status: 1
+  current_level: 1
+  payout_multiplier: 9.99
+  winnings_in_cents: 1
+  levels_layout: 
+  player_choices: 
+
+two:
+  user: two
+  difficulty: MyString
+  bet_amount_in_cents: 1
+  status: 1
+  current_level: 1
+  payout_multiplier: 9.99
+  winnings_in_cents: 1
+  levels_layout: 
+  player_choices: 
