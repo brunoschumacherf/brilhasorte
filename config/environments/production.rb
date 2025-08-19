@@ -10,6 +10,8 @@ Rails.application.configure do
     "https://brilhasorte-frontend.vercel.app",
     "http://brilhasorte-frontend.vercel.app"
   ]
+  # adicionar env
+  config.action_cable.url = "wss://brilhasorte.onrender.com/cable"
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
