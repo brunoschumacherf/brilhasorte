@@ -8,7 +8,3 @@ production:
   adapter: redis
   url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
   channel_prefix: brilhasorte_production
-  url: redis://localhost:6379/1
-  allowed_request_origins:
-    - "https://brilhasorte-frontend.vercel.app"
-    - "http://brilhasorte-frontend.vercel.app"
