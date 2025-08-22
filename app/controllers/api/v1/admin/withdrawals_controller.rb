@@ -20,12 +20,26 @@ class Api::V1::Admin::WithdrawalsController < Api::V1::Admin::BaseController
 
   def approve
     if @withdrawal.pending?
-      @withdrawal.update(status: 'completed')
-      render json: { message: 'Saque aprovado com sucesso.' }, status: :ok
+      begin
+        efipay_response = EfipayWithdrawalService.new.send_pix(
+          withdrawal_id: @withdrawal.id,
+          amount_in_cents: @withdrawal.amount_in_cents,
+          pix_key: @withdrawal.pix_key
+        )
+
+        @withdrawal.update!(
+          status: 'processing',
+        )
+
+        render json: { message: 'Saque aprovado e Pix enviado com sucesso.' }, status: :ok
+      rescue => e
+        render json: { error: "Falha ao processar saque: #{e.message}" }, status: :unprocessable_entity
+      end
     else
       render json: { error: 'Este saque não pode ser aprovado.' }, status: :unprocessable_entity
     end
   end
+
 
   private
 

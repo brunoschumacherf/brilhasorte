@@ -25,6 +25,8 @@ gem 'rack-attack'
 gem 'ransack'
 gem 'rack-cors'
 gem 'mercadopago-sdk'
+gem 'httparty'
+gem 'openssl'
 
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
