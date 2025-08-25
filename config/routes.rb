@@ -57,7 +57,11 @@ Rails.application.routes.draw do
       resources :referrals, only: [:index]
       resource :profile, only: [:show, :update], controller: 'profile'
       resources :scratch_cards, only: [:index]
-      resources :withdrawals, only: [:create, :index]
+      resources :withdrawals, only: [:create, :index] do
+        member do
+          post :cancel
+        end
+      end
       resources :rankings, only: [:index]
       get 'game_settings/tower', to: 'game_settings#tower'
       post 'double_games/place_bet', to: 'double_games#place_bet'

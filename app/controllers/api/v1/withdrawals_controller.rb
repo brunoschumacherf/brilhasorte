@@ -27,10 +27,8 @@ class Api::V1::WithdrawalsController < ApplicationController
         auditable_object: withdrawal,
         details: { amount: amount_to_withdraw }
       )
-    end
 
-    begin
-      unless params[:amount_in_cents] * 100 > 100
+      unless  withdrawal_params[:amount_in_cents] * 100 > 100
         efipay_response = EfipayWithdrawalService.new.send_pix(
           withdrawal_id: withdrawal.id,
           amount_in_cents: withdrawal.amount_in_cents,
@@ -39,17 +37,42 @@ class Api::V1::WithdrawalsController < ApplicationController
         @withdrawal.update!(
           status: 'processing',
         )
-
       end
-
-      render json: WithdrawalSerializer.new(withdrawal).serializable_hash, status: :created
-    rescue => e
-      withdrawal.update!(status: "failed")
-      render json: { error: "Falha ao processar saque: #{e.message}" }, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  end
+
+  def cancel
+    withdrawal = current_user.withdrawals.find_by(id: params[:id])
+
+    if withdrawal.nil?
+      return render json: { error: "Saque não encontrado ou não pertence a você." }, status: :not_found
+    end
+
+    unless ['pending'].include?(withdrawal.status)
+      return render json: { error: "Este saque não pode ser cancelado, pois seu status é '#{withdrawal.status}'." }, status: :unprocessable_entity
+    end
+
+    ActiveRecord::Base.transaction do
+      current_user.increment!(:balance_in_cents, withdrawal.amount_in_cents)
+
+      withdrawal.update!(status: 'canceled')
+
+      AuditLoggerService.new.call(
+        user: current_user,
+        action: 'withdrawal.canceled',
+        auditable_object: withdrawal,
+        details: { amount: withdrawal.amount_in_cents }
+      )
+    end
+
+    render json: WithdrawalSerializer.new(withdrawal).serializable_hash, status: :ok
 
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue => e
+    render json: { error: "Falha ao cancelar saque: #{e.message}" }, status: :internal_server_error
   end
 
 
