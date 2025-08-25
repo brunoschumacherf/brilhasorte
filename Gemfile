@@ -27,6 +27,7 @@ gem 'rack-cors'
 gem 'mercadopago-sdk'
 gem 'httparty'
 gem 'openssl'
+gem "cpf_cnpj"
 
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]

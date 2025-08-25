@@ -17,13 +17,24 @@ class User < ApplicationRecord
   has_many :tower_games
   has_many :limbo_games
 
+
+  validates :full_name, presence: true
+validates :email, presence: { message: "Não pode ficar em branco" },
+                  uniqueness: { message: "Email Invalido" },
+                  format: { with: URI::MailTo::EMAIL_REGEXP, message: "Não é válido" }
+  validates :cpf, presence: true, uniqueness: true
+  validates :phone_number, presence: true
+  validates :birth_date, presence: true
+
+  validate :cpf_must_be_valid
+  validate :must_be_over_18
+
   after_create :generate_referral_code
 
   def can_claim_daily_free_game?
     self.last_free_game_claimed_at.nil? || self.last_free_game_claimed_at < 24.hours.ago
   end
 
-  # TO DO remove this method when the frontend is updated
   def can_claim_daily_game
     can_claim_daily_free_game?
   end
@@ -38,6 +49,20 @@ class User < ApplicationRecord
       break unless User.exists?(referral_code: self.referral_code)
     end
     self.update_column(:referral_code, self.referral_code)
+  end
+
+  def cpf_must_be_valid
+    return if cpf.blank?
+    unless CPF.valid?(cpf)
+      errors.add(:cpf, "Inválido")
+    end
+  end
+
+  def must_be_over_18
+    return if birth_date.blank?
+    if birth_date > 18.years.ago.to_date
+      errors.add(:birth_date, "Deve ser maior de 18 anos")
+    end
   end
 
 end
